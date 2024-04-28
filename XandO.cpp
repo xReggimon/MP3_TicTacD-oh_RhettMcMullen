@@ -42,9 +42,51 @@ int main() {
 	cout << "player2: "; getline(cin, player2);
 	cout << endl;
 
+	bool player1Turn = true;
 
-	displayBoard(board);
-	//displayGameStats(ties, player1Score, player2Score, player1, player2);
+	while (true) {
+		displayBoard(board);
+
+		string currentPlayer = player1Turn ? "Player 1" : "Player 2";
+		int input = getPlayerInput(currentPlayer);
+
+		if (!isLegalMove(board, input)) {
+			cout << "Invalid input, please try again." << endl;
+			continue;
+		}
+
+		char mark = player1Turn ? 'X' : 'O';
+		placeMarkOnBoard(board, mark, input);
+
+		if (hasThreeInARow(board, mark)) {
+			cout << currentPlayer << " wins! Yipee!" << endl;
+			if (player1Turn) {
+				player1Score++;
+			}
+			else {
+				player2Score++;
+			}
+		}
+
+		bool boardFull = true;
+		for (int i = 0; i < 9; i++) {
+			if (board[i] != 'X' && board[i] != 'O') {
+				boardFull = false;
+				break;
+			}
+		}
+		if (boardFull) {
+			cout << "Tie..." << endl;
+			ties++;
+			break;
+		}
+
+		player1Turn = !player1Turn;
+
+	}
+
+	displayGameStats(ties, player1Score, player2Score);
+
 	return 0;
 }
 
